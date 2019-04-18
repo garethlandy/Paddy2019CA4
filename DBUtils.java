@@ -71,9 +71,38 @@ public class DBUtils {
 		}
 		return null;
 	}
+	
+	public static List<org.gareth.webapp.beans.ShoppingCart> queryShoppingCart(Connection conn) throws SQLException {
+		/*String sql = "Select a.userName, a.code from Shopping_Cart a";*/
+		String sql =
+		"select s.userName, s.code, p.name, p.manufacturer, p.price "
+		+ "from shopping_cart s "
+		+ "join product p on p.CODE = s.code";
+		
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		ResultSet rs = pstm.executeQuery();
+		List<org.gareth.webapp.beans.ShoppingCart> list = 
+				new ArrayList<org.gareth.webapp.beans.ShoppingCart>();
+		while (rs.next()) {
+		String userName = rs.getString("userName");
+		String code = rs.getString("code");
+		String pname = rs.getString("name");
+		String manu = rs.getString("manufacturer");
+		
+		
+		org.gareth.webapp.beans.ShoppingCart cart = new org.gareth.webapp.beans.ShoppingCart();
+		cart.setCode(code);
+		cart.setUserName(userName);
+		cart.setManufacturer(manu);
+		cart.setName(pname);
+		list.add(cart);
+		}
+		return list;
+		
+	}
 
 	public static List<Product> queryProduct(Connection conn) throws SQLException {
-		String sql = "Select a.Code, a.Name, a.Price, a.Manufacturer, a.Category from Product a ";
+		String sql = "Select a.Code, a.Name, a.Price, a.Manufacturer, a.Category, a.imageFile, a.stock from Product a ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
@@ -85,19 +114,23 @@ public class DBUtils {
 			float price = rs.getFloat("Price");
 			String manufacturer = rs.getString("Manufacturer");
 			String category = rs.getString("Category");
+			String imageFile = rs.getString("imageFile");
+			int stock = rs.getInt("stock");
 			Product product = new Product();
 			product.setCode(code);
 			product.setName(name);
 			product.setPrice(price);
 			product.setManufacturer(manufacturer);
 			product.setCategory(category);
+			product.setImageFile(imageFile);
+			product.setStock(stock);
 			list.add(product);
 		}
 		return list;
 	}
 
 	public static Product findProduct(Connection conn, String code) throws SQLException {
-		String sql = "Select a.Code, a.Name, a.Price, a.Manufacturer, a.Category from Product a where a.Code=?";
+		String sql = "Select a.Code, a.Name, a.Price, a.Manufacturer, a.Category, a.imageFile, a.stock from Product a where a.Code=?";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, code);
@@ -109,14 +142,16 @@ public class DBUtils {
 			float price = rs.getFloat("Price");
 			String manufacturer = rs.getString("Manufacturer");
 			String category = rs.getString("Category");
-			Product product = new Product(code, name, price, manufacturer, category);
+			String imageFile = rs.getString("imageFile");
+			int amountInStock = rs.getInt("stock");
+			Product product = new Product(code, name, price, manufacturer, category, imageFile,amountInStock);
 			return product;
 		}
 		return null;
 	}
 
 	public static void updateProduct(Connection conn, Product product) throws SQLException {
-		String sql = "Update Product set Name =?, Price =?, manufacturer =?, category =? where Code=? ";
+		String sql = "Update Product set Name =?, Price =?, manufacturer =?, category =?, stock = ? where Code=? ";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
@@ -125,12 +160,14 @@ public class DBUtils {
 		// pstm.setString(3, product.getCode());
 		pstm.setString(3, product.getManufacturer());
 		pstm.setString(4, product.getCategory());
-		pstm.setString(5, product.getCode());
+		pstm.setInt(5, product.getStock());
+		pstm.setString(6, product.getCode());
+		
 		pstm.executeUpdate();
 	}
 
 	public static void insertProduct(Connection conn, Product product) throws SQLException {
-		String sql = "Insert into Product(Code, Name, Price, Manufacturer, Category) values (?,?,?,?,?)";
+		String sql = "Insert into Product(Code, Name, Price, Manufacturer, Category, ImageFile, Stock) values (?,?,?,?,?,?,?)";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
@@ -139,7 +176,19 @@ public class DBUtils {
 		pstm.setFloat(3, product.getPrice());
 		pstm.setString(4, product.getManufacturer());
 		pstm.setString(5, product.getCategory());
+		pstm.setString(6, product.getImageFile());
+		pstm.setInt(7, product.getStock());
 
+		pstm.executeUpdate();
+	}
+	
+	public static void insertIntoShoppingCart(Connection conn, org.gareth.webapp.beans.ShoppingCart cart) throws SQLException{
+		String sql = "Insert into Shopping_Cart(userName,code,paid) values(?,?,?)";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		
+		pstm.setString(1, cart.getUserName());
+		pstm.setString(2, cart.getCode());
+		pstm.setString(3, cart.getPaid());
 		pstm.executeUpdate();
 	}
 

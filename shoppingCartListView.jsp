@@ -38,7 +38,7 @@ tr:hover {background-color:#f5f5f5;}
     <jsp:include page="_header.jsp"></jsp:include>
     <jsp:include page="_menu.jsp"></jsp:include>
  
-    <h3>Product List</h3>
+    <h3>${user.userName}'s Shopping Cart</h3>
  
     <p style="color: red;">${errorString}</p>
  
@@ -48,23 +48,27 @@ tr:hover {background-color:#f5f5f5;}
     <table id = "myTable">
        <tr>
           <th>Code</th>
-          <th onclick="sortTable(1)">Name</button></th>
+          <th>Product Name</th>
+          <th>Manufacturer</th>
+          <!-- <th onclick="sortTable(1)">Name</button></th>
           <th onclick="sortTable(2)">Price</th>
           <th onclick="sortTable(3)">Manufacturer</th>
           <th onclick="sortTable(4)">Category</th>
           <th>Image</th>
           <th>Stock</th>
           <th>Edit</th>
-          <th>Delete</th>
+          <th>Delete</th> -->
        </tr>
-       <c:forEach items="${productList}" var="product" >
+       <c:forEach items="${shoppingCart}" var="shoppingCart" >
           <tr>
-             <td>${product.code}</td>
-             <td>${product.name}</td>
+             <td>${shoppingCart.code}</td>
+             <td>${shoppingCart.name}</td>
+             <td>${shoppingCart.manufacturer}</td>
+             <%-- <td>${product.name}</td>
              <td>${product.price}</td>
              <td>${product.manufacturer}</td>
              <td>${product.category}</td>
-             <%-- <td>${product.category}</td>--%>
+             <td>${product.category}</td>
              <td>${product.imageFile}</td>
              <td>${product.stock}</td>
              <td>
@@ -72,7 +76,7 @@ tr:hover {background-color:#f5f5f5;}
              </td>
              <td>
                 <a href="deleteProduct?code=${product.code}">Delete</a>
-             </td>
+             </td> --%>
           </tr>
        </c:forEach>
     </table>
@@ -135,7 +139,7 @@ function sortTable(n) {
 }
 </script>
 
- <a href="createProduct" >Create Product</a>
+ <!-- <a href="createProduct" >Create Product</a> -->
  
     <jsp:include page="_footer.jsp"></jsp:include>
  </body>

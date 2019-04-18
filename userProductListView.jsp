@@ -54,8 +54,8 @@ tr:hover {background-color:#f5f5f5;}
           <th onclick="sortTable(4)">Category</th>
           <th>Image</th>
           <th>Stock</th>
-          <th>Edit</th>
-          <th>Delete</th>
+          <th>Buy</th>
+          
        </tr>
        <c:forEach items="${productList}" var="product" >
           <tr>
@@ -68,11 +68,11 @@ tr:hover {background-color:#f5f5f5;}
              <td>${product.imageFile}</td>
              <td>${product.stock}</td>
              <td>
-                <a href="editProduct?code=${product.code}">Edit</a>
+                <a href="buyProduct?code=${product.code}">Buy</a>
              </td>
-             <td>
+             <%-- <td>
                 <a href="deleteProduct?code=${product.code}">Delete</a>
-             </td>
+             </td> --%>
           </tr>
        </c:forEach>
     </table>
@@ -135,7 +135,7 @@ function sortTable(n) {
 }
 </script>
 
- <a href="createProduct" >Create Product</a>
+ <!-- <a href="createProduct" >Create Product</a> -->
  
     <jsp:include page="_footer.jsp"></jsp:include>
  </body>
