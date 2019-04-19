@@ -38,6 +38,7 @@ public class BuyProductServlet extends HttpServlet {
 		 HttpSession session = request.getSession();
 		String code = (String) request.getParameter("code");
 		UserAccount loginedUser = MyUtils.getLoginedUser(session);
+		String admin = loginedUser.getAdmin();
         Product product = null;
  
         String errorString = null;
@@ -61,6 +62,7 @@ public class BuyProductServlet extends HttpServlet {
         request.setAttribute("errorString", errorString);
         request.setAttribute("product", product);
         request.setAttribute("user", loginedUser);
+        request.setAttribute("admin", admin);
 
 		RequestDispatcher dispatcher = request.getServletContext()
 				.getRequestDispatcher("/WEB-INF/views/buyProductView.jsp");
@@ -77,11 +79,11 @@ public class BuyProductServlet extends HttpServlet {
 
 		String productCode = (String) request.getParameter("code");
 		String userName = (String) request.getParameter("userName");
-		String paid = (String) request.getParameter("paid");
+		/*String paid = (String) request.getParameter("paid");*/
 		
 		
 		org.gareth.webapp.beans.ShoppingCart cart = 
-				new org.gareth.webapp.beans.ShoppingCart(userName,productCode,paid);
+				new org.gareth.webapp.beans.ShoppingCart(userName,productCode);
 
 		String errorString = null;
 
@@ -115,7 +117,7 @@ public class BuyProductServlet extends HttpServlet {
 		// If everything nice.
 		// Redirect to the product listing page.
 		else {
-			response.sendRedirect(request.getContextPath() + "/userProductList");
+			response.sendRedirect(request.getContextPath() + "/shoppingCart");
 		}
 	}
 

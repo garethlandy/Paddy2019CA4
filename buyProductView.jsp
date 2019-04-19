@@ -83,7 +83,7 @@ tr:hover {background-color:#f5f5f5;}
                <tr>
                   <td colspan = "2">
                       <input type="submit" value="Submit" />
-                      <a href="${pageContext.request.contextPath}/userProductList">Cancel</a>
+                      <a href="${pageContext.request.contextPath}/shoppingCart">Cancel</a>
                   </td>
                </tr>
             </table>

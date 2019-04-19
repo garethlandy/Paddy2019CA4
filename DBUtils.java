@@ -71,34 +71,62 @@ public class DBUtils {
 		}
 		return null;
 	}
-	
-	public static List<org.gareth.webapp.beans.ShoppingCart> queryShoppingCart(Connection conn) throws SQLException {
-		/*String sql = "Select a.userName, a.code from Shopping_Cart a";*/
-		String sql =
-		"select s.userName, s.code, p.name, p.manufacturer, p.price "
-		+ "from shopping_cart s "
-		+ "join product p on p.CODE = s.code";
-		
+
+	public static List<org.gareth.webapp.beans.ShoppingCart> queryShoppingCart(Connection conn, UserAccount userName)
+			throws SQLException {
+		/* String sql = "Select a.userName, a.code from Shopping_Cart a"; */
+		String sql = "select s.userName, s.code, p.name, p.manufacturer, p.price " + "from shopping_cart s "
+				+ "join product p on p.CODE = s.code " + "where s.userName = ?";
+
 		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, userName.getUserName());
 		ResultSet rs = pstm.executeQuery();
-		List<org.gareth.webapp.beans.ShoppingCart> list = 
-				new ArrayList<org.gareth.webapp.beans.ShoppingCart>();
+		List<org.gareth.webapp.beans.ShoppingCart> list = new ArrayList<org.gareth.webapp.beans.ShoppingCart>();
 		while (rs.next()) {
-		String userName = rs.getString("userName");
-		String code = rs.getString("code");
-		String pname = rs.getString("name");
-		String manu = rs.getString("manufacturer");
-		
-		
-		org.gareth.webapp.beans.ShoppingCart cart = new org.gareth.webapp.beans.ShoppingCart();
-		cart.setCode(code);
-		cart.setUserName(userName);
-		cart.setManufacturer(manu);
-		cart.setName(pname);
-		list.add(cart);
+			String suserName = rs.getString("userName");
+			String code = rs.getString("code");
+			String pname = rs.getString("name");
+			String manu = rs.getString("manufacturer");
+			float price = rs.getFloat("Price");
+
+			org.gareth.webapp.beans.ShoppingCart cart = new org.gareth.webapp.beans.ShoppingCart();
+			cart.setCode(code);
+			cart.setUserName(suserName);
+			cart.setManufacturer(manu);
+			cart.setName(pname);
+			cart.setPrice(price);
+			list.add(cart);
 		}
 		return list;
-		
+
+	}
+
+	public static List<Product> searchProduct(Connection conn, String name) throws SQLException {
+		String sql = "Select p.code, p.name, p.price, p.manufacturer, p.Category, p.imageFile, p.stock "
+				+ "from Product p where lower(p.name) like ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, "%" + name + "%");
+		ResultSet rs = pstm.executeQuery();
+		List<Product> list = new ArrayList<Product>();
+		while (rs.next()) {
+			String code = rs.getString("Code");
+			String pname = rs.getString("Name");
+			float price = rs.getFloat("Price");
+			String manufacturer = rs.getString("Manufacturer");
+			String category = rs.getString("Category");
+			String imageFile = rs.getString("imageFile");
+			int stock = rs.getInt("stock");
+			Product product = new Product();
+			product.setCode(code);
+			product.setName(pname);
+			product.setPrice(price);
+			product.setManufacturer(manufacturer);
+			product.setCategory(category);
+			product.setImageFile(imageFile);
+			product.setStock(stock);
+			list.add(product);
+		}
+		return list;
 	}
 
 	public static List<Product> queryProduct(Connection conn) throws SQLException {
@@ -144,7 +172,7 @@ public class DBUtils {
 			String category = rs.getString("Category");
 			String imageFile = rs.getString("imageFile");
 			int amountInStock = rs.getInt("stock");
-			Product product = new Product(code, name, price, manufacturer, category, imageFile,amountInStock);
+			Product product = new Product(code, name, price, manufacturer, category, imageFile, amountInStock);
 			return product;
 		}
 		return null;
@@ -162,7 +190,7 @@ public class DBUtils {
 		pstm.setString(4, product.getCategory());
 		pstm.setInt(5, product.getStock());
 		pstm.setString(6, product.getCode());
-		
+
 		pstm.executeUpdate();
 	}
 
@@ -181,24 +209,36 @@ public class DBUtils {
 
 		pstm.executeUpdate();
 	}
-	
-	public static void insertIntoShoppingCart(Connection conn, org.gareth.webapp.beans.ShoppingCart cart) throws SQLException{
+
+	public static void insertIntoShoppingCart(Connection conn, org.gareth.webapp.beans.ShoppingCart cart)
+			throws SQLException {
 		String sql = "Insert into Shopping_Cart(userName,code,paid) values(?,?,?)";
 		PreparedStatement pstm = conn.prepareStatement(sql);
-		
+
 		pstm.setString(1, cart.getUserName());
 		pstm.setString(2, cart.getCode());
-		pstm.setString(3, cart.getPaid());
+		pstm.setString(3, "n");
 		pstm.executeUpdate();
 	}
 
 	public static void deleteProduct(Connection conn, String code) throws SQLException {
-		String sql = "Delete From Product where Code= ?";
+		String sql = "Delete From Product where Code = ?";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 
 		pstm.setString(1, code);
+		System.out.println("xxxx"+code.toString());
+		pstm.executeUpdate();
+	}
 
+	public static void deleteCartItem(Connection conn, String code, String user) throws SQLException {
+		String sql = "Delete From Shopping_Cart where userName = ? and Code = ?";
+
+		PreparedStatement pstm = conn.prepareStatement(sql);
+
+		pstm.setString(1, user);
+		pstm.setString(2, code);
+		System.out.println("xxxx"+code.toString() + "" + user.toString());
 		pstm.executeUpdate();
 	}
 

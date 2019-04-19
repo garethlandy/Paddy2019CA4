@@ -54,9 +54,9 @@ public class UserProductListServlet extends HttpServlet {
 		
 		String userName = (String) request.getParameter("user");
 		String productCode = (String) request.getParameter("code");
-		String paid = (String) request.getParameter("paid");
+		/*String paid = (String) request.getParameter("paid");*/
 		
-		ShoppingCart cart = new ShoppingCart(userName,productCode,paid);
+		ShoppingCart cart = new ShoppingCart(userName,productCode);
 		
 		try {
 			DBUtils.insertIntoShoppingCart(conn, cart);

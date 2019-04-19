@@ -33,15 +33,17 @@ public class ShoppingCart extends HttpServlet {
     	Connection conn = MyUtils.getStoredConnection(request);
     	HttpSession session = request.getSession();
     	UserAccount loginedUser = MyUtils.getLoginedUser(session);
+    	String admin = loginedUser.getAdmin();
     	String errorString = null;
         List<org.gareth.webapp.beans.ShoppingCart> list = null;
         try {
-            list = DBUtils.queryShoppingCart(conn);
+            list = DBUtils.queryShoppingCart(conn,loginedUser);
         } catch (SQLException e) {
             e.printStackTrace();
             errorString = e.getMessage();
         }
          
+        request.setAttribute("admin", admin);
         request.setAttribute("user", loginedUser);
         request.setAttribute("errorString", errorString);
         request.setAttribute("shoppingCart", list);

@@ -35,10 +35,9 @@ tr:hover {background-color:#f5f5f5;}
  </head>
  <body> 
  
-    <jsp:include page="_header.jsp"></jsp:include>
-    <jsp:include page="_menu.jsp"></jsp:include>
- 
-    <h3>Product List</h3>
+    <jsp:include page="_searchHeader.jsp"></jsp:include>
+    <jsp:include page="userMenu.jsp"></jsp:include>
+    
  
     <p style="color: red;">${errorString}</p>
  
@@ -61,14 +60,16 @@ tr:hover {background-color:#f5f5f5;}
           <tr>
              <td>${product.code}</td>
              <td>${product.name}</td>
-             <td>${product.price}</td>
+             <td>€${product.price}</td>
              <td>${product.manufacturer}</td>
              <td>${product.category}</td>
              <%-- <td>${product.category}</td>--%>
-             <td>${product.imageFile}</td>
+             <%-- <td>${product.imageFile}</td> --%>
+             <td><a href = "${product.imageFile}">
+             <img src="${product.imageFile}" id="visa" style="float: left; width: 100px; height: 75px;"></a></td>
              <td>${product.stock}</td>
              <td>
-                <a href="buyProduct?code=${product.code}">Buy</a>
+                <a href="buyProduct?code=${product.code}">Add To Basket</a>                
              </td>
              <%-- <td>
                 <a href="deleteProduct?code=${product.code}">Delete</a>
