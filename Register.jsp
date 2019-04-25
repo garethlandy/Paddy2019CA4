@@ -39,6 +39,15 @@
 				</td>
 			</tr>
 			<tr>
+				<td>Admin</td>
+				<td>
+				<select name="admin">
+					<option value="y">Yes</option>
+					<option value="n">No</option>					
+				</select>				
+				</td>
+			</tr>
+			<tr>
 				<td>Street Address 1</td>
 				<td><input type="text" name="street1" />
 				</td>
