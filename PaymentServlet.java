@@ -33,10 +33,27 @@ public class PaymentServlet extends HttpServlet {
 		UserAccount loginedUser = MyUtils.getLoginedUser(session);
 		request.setAttribute("user", loginedUser);
 		
-		
-    	RequestDispatcher dispatcher = request.getServletContext()
-                .getRequestDispatcher("/WEB-INF/views/Payment.jsp");
-        dispatcher.forward(request, response);
+		String cardChoice="";
+		   int selectedItem;
+		   String item = request.getParameter("item");
+		   selectedItem = Integer.parseInt(item);
+		   
+		   PaymentContext ctx = null;
+		    ctx = new PaymentContext();
+		   
+		   if(selectedItem == 1) {
+			   cardChoice = "/WEB-INF/views/Mastercard.jsp";
+		   }else if (selectedItem == 2) {
+			   //cardChoice = "/WEB-INF/views/Visa.jsp";
+			   ctx.setPaymentStrategy(new VisaServlet());
+			   //response.sendRedirect(request.getContextPath() + "/visa");
+			   //ctx.setPaymentStrategy(new VisaServlet());
+		   }else if  (selectedItem == 2) {
+			   cardChoice = "/WEB-INF/views/Amex.jsp";
+		   }
+    	/*RequestDispatcher dispatcher = request.getServletContext()
+                .getRequestDispatcher(selectedItem);
+        dispatcher.forward(request, response);*/
 	        
 	 
 	    }
@@ -44,6 +61,28 @@ public class PaymentServlet extends HttpServlet {
 	
 	   protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	           throws ServletException, IOException {
-	       doGet(request, response);
+		   
+		   String cardChoice="";
+		   int selectedItem;
+		   String item = request.getParameter("item");
+		   selectedItem = Integer.parseInt(item);
+		   
+		   PaymentContext ctx = null;
+		    ctx = new PaymentContext();
+		   
+		   if(selectedItem == 1) {
+			   cardChoice = "/WEB-INF/views/Mastercard.jsp";
+		   }else if (selectedItem == 2) {
+			   //cardChoice = "/WEB-INF/views/Visa.jsp";
+			   ctx.setPaymentStrategy(new VisaServlet());
+			   //response.sendRedirect(request.getContextPath() + "/visa");
+			   //ctx.setPaymentStrategy(new VisaServlet());
+		   }else if  (selectedItem == 2) {
+			   cardChoice = "/WEB-INF/views/Amex.jsp";
+		   }
+		   
+		   /*RequestDispatcher dispatcher = request.getServletContext()
+	                .getRequestDispatcher(cardChoice);
+	        dispatcher.forward(request, response);*/
 	   }
 }

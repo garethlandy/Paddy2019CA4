@@ -24,7 +24,7 @@
 
 	<div class="creditCardForm">
 		<div class="heading">
-			<form action="some.jsp">
+			<form method="POST" action="${pageContext.request.contextPath}/payment">
 				<select name="item">
 					<option value="1">MasterCard</option>
 					<option value="2">Visa</option>

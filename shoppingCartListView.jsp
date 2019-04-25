@@ -51,6 +51,17 @@ tr:hover {
 
 	</c:choose>
 
+<%-- <c:choose>
+    <c:when test="${count==('0')}">
+       <h3>${user.userName}'s  Shopping Cart is empty</h3>
+    </c:when>    
+    <c:otherwise>
+       <h3>${user.userName}'s  Shopping Cart</h3>
+    </c:otherwise>
+</c:choose> --%>
+
+
+
 	<h3>${user.userName}'s  Shopping Cart</h3>
 
 	<p style="color: red;">${errorString}</p>
@@ -85,7 +96,7 @@ tr:hover {
 				<td>${shoppingCart.name}</td>
 				<td>${shoppingCart.manufacturer}</td>
 				<td>€${shoppingCart.price}</td>
-				<td><a href="deleteProduct?code=${product.code}">Delete</a></td>
+				<td><a href="deleteProduct?code=${shoppingCart.code}">Delete</a></td>
 
 
 				<%-- <td>${product.name}</td>
@@ -117,10 +128,28 @@ tr:hover {
 			<!-- <td><b> Proceed to Payment </b></td> -->
 			<td><b> TOTAL </b></td>
 			<td>€<b>${total}</b></td>			
-			<td><a href="${pageContext.request.contextPath}/payment">Payment</a></td>
+			<%-- <td><a href="${pageContext.request.contextPath}/payment">Payment</a></td> --%>
+			<td><form method="POST" action="${pageContext.request.contextPath}/shoppingCart">
+				<select name="item">
+					<option value="1">MasterCard</option>
+					<option value="2">Visa</option>
+					<option value="3">American Express</option>
+				</select> <input type="submit" value="Submit" onClick='submitForm(${count})'>
+			</form></td>
 		</tr>
 
 	</table>
+	<script>
+   function submitForm(${count}){
+      if(${count}==0){
+    	  <p style="color: red;">${errorString}</p>
+      }      
+      else{
+    	  action="${pageContext.request.contextPath}/payment"
+      }
+     
+   }
+</script>
 
 
 	<script>

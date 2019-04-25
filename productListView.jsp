@@ -135,7 +135,7 @@ function sortTable(n) {
 }
 </script>
 
- <a href="createProduct" >Create Product</a>
+ <a href="createProduct" ><h3 style="color: red; font-weight: bold;">Create New Product</h3></a>
  
     <jsp:include page="_footer.jsp"></jsp:include>
  </body>

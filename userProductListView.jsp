@@ -40,6 +40,12 @@ tr:hover {background-color:#f5f5f5;}
     
  
     <p style="color: red;">${errorString}</p>
+    <c:set var="total" value="${0}" />
+		<c:set var="count" value="${0}" />
+		<c:forEach items="${shoppingCart}" var="shoppingCart">
+			<c:set var="total" value="${total + shoppingCart.price}" />
+			<c:set var="count" value="${count + 1}" />
+			</c:forEach>
  
     <%-- <table border="1" cellpadding="5" cellspacing="1" >--%>
 

@@ -17,7 +17,7 @@
        
       <p style="color: red;">${errorString}</p>
        
-      <form method="POST" action="${pageContext.request.contextPath}/createProduct">
+      <form method="POST" action="${pageContext.request.contextPath}/createProduct" enctype="multipart/form-data">
          <table border="0">
             <tr>
                <td>Code</td>
@@ -38,6 +38,14 @@
             <tr>
                <td>Category</td>
                <td><input type="text" name="category" value="${product.category}" /></td>
+            </tr>
+            <tr>
+               <td>Stock</td>
+               <td><input type="text" name="stock" value="${product.stock}" /></td>
+            </tr>
+            <tr>
+               <td>Image</td>
+               <td><input type="file" name="file" value="images/${product.imageFile}" /></td>
             </tr>
             <tr>
                <td colspan="2">                   

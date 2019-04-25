@@ -14,7 +14,7 @@ public class DBUtils {
 	public static UserAccount findUser(Connection conn, //
 			String userName, String password) throws SQLException {
 
-		String sql = "Select a.User_Name, a.Password, a.Gender, a.Admin, a.Street_Address_1"
+		String sql = "Select a.firstname, a.lastname, a.User_Name, a.Password, a.Gender, a.Admin, a.Street_Address_1"
 				+ ", a.Street_Address_2, a.Town, a.City, a.Country, a.Post_Code" + " from User_Account a " //
 				+ " where a.User_Name = ? and a.password= ?";
 
@@ -24,6 +24,8 @@ public class DBUtils {
 		ResultSet rs = pstm.executeQuery();
 
 		if (rs.next()) {
+			String firstname = rs.getString("firstname");
+			String lastname = rs.getString("lastname");
 			String gender = rs.getString("Gender");
 			String admin = rs.getString("Admin");
 			String s1 = rs.getString("Street_Address_1");
@@ -33,6 +35,8 @@ public class DBUtils {
 			String country = rs.getString("Country");
 			String postcode = rs.getString("Post_Code");
 			UserAccount user = new UserAccount();
+			user.setFirstname(firstname);
+			user.setLastname(lastname);
 			user.setUserName(userName);
 			user.setPassword(password);
 			user.setGender(gender);
@@ -50,9 +54,10 @@ public class DBUtils {
 
 	public static UserAccount findUser(Connection conn, String userName) throws SQLException {
 
-		String sql = "Select a.User_Name, a.Password, a.Gender, a.Admin from User_Account a "//
-				+ " where a.User_Name = ? ";
-
+		String sql = "Select a.firstname,a.lastname, a.street_address_1, a.street_address_2, "
+				+ "a.town, a.city, a.country, a.post_code, a.User_Name, a.Password, a.Gender, a.Admin from User_Account a "
+				+ "where a.User_Name = ?";
+		System.out.println(userName+"xxxxxxxxxxxxxxxxxxxx");
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, userName);
 
@@ -62,11 +67,27 @@ public class DBUtils {
 			String password = rs.getString("Password");
 			String gender = rs.getString("Gender");
 			String admin = rs.getString("Admin");
+			String firstname = rs.getString("firstname");
+			String lastname = rs.getString("lastname");
+			String street1 = rs.getString("street_address_1");
+			String street2 = rs.getString("street_address_2");
+			String town = rs.getString("town");
+			String city = rs.getString("city");
+			String country = rs.getString("country");
+			String postcode = rs.getString("post_code");
 			UserAccount user = new UserAccount();
 			user.setUserName(userName);
 			user.setPassword(password);
 			user.setGender(gender);
 			user.setAdmin(admin);
+			user.setFirstname(firstname);
+			user.setLastname(lastname);
+			user.setStreet_address_1(street1);
+			user.setStreet_address_2(street2);
+			user.setTown(town);
+			user.setCity(city);
+			user.setCountry(country);
+			user.setPostcode(postcode);
 			return user;
 		}
 		return null;
@@ -76,7 +97,7 @@ public class DBUtils {
 			throws SQLException {
 		/* String sql = "Select a.userName, a.code from Shopping_Cart a"; */
 		String sql = "select s.userName, s.code, p.name, p.manufacturer, p.price " + "from shopping_cart s "
-				+ "join product p on p.CODE = s.code " + "where s.userName = ?";
+				+ "join product p on p.CODE = s.code " + "where s.userName = ? and s.paid = 'n'";
 
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, userName.getUserName());
@@ -103,9 +124,10 @@ public class DBUtils {
 
 	public static List<Product> searchProduct(Connection conn, String name) throws SQLException {
 		String sql = "Select p.code, p.name, p.price, p.manufacturer, p.Category, p.imageFile, p.stock "
-				+ "from Product p where lower(p.name) like ?";
+				+ "from Product p where lower(p.name) like ? or lower(p.category) like ?";
 		PreparedStatement pstm = conn.prepareStatement(sql);
 		pstm.setString(1, "%" + name + "%");
+		pstm.setString(2, "%" + name + "%");
 		ResultSet rs = pstm.executeQuery();
 		List<Product> list = new ArrayList<Product>();
 		while (rs.next()) {
@@ -193,6 +215,26 @@ public class DBUtils {
 
 		pstm.executeUpdate();
 	}
+	
+	public static void updateUser(Connection conn, UserAccount user) throws SQLException {
+		String sql = "Update User_Account set user_Name = ?, "
+				+ "street_address_1 = ?, "
+				+ "street_address_2 = ?, "
+				+ "town = ?, city = ?, "
+				+ "country = ?, post_code = ? "
+				+ "where user_Name = ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, user.getUserName());
+		pstm.setString(2, user.getStreet_address_1());
+		pstm.setString(3, user.getStreet_address_2());
+		pstm.setString(4, user.getTown());
+		pstm.setString(5, user.getCity());
+		pstm.setString(6, user.getCountry());
+		pstm.setString(7, user.getPostcode());
+		pstm.setString(8, user.getUserName());
+		pstm.executeUpdate();
+		
+	}
 
 	public static void insertProduct(Connection conn, Product product) throws SQLException {
 		String sql = "Insert into Product(Code, Name, Price, Manufacturer, Category, ImageFile, Stock) values (?,?,?,?,?,?,?)";
@@ -204,10 +246,31 @@ public class DBUtils {
 		pstm.setFloat(3, product.getPrice());
 		pstm.setString(4, product.getManufacturer());
 		pstm.setString(5, product.getCategory());
-		pstm.setString(6, product.getImageFile());
+		pstm.setString(6, "images/"+product.getImageFile());
 		pstm.setInt(7, product.getStock());
 
 		pstm.executeUpdate();
+	}
+	public static void insertIntoUserAccount(Connection conn, String f, String l,String u, String g, String p,
+			String s1, String s2, String t, String c, String co, String pos) throws SQLException {
+		String sql = "Insert into User_Account(firstName, lastName, user_Name, gender,password,street_address_1,"
+				+ "street_address_2, town, city, country, post_code,payment_method,card) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, f);
+		pstm.setString(2, l);
+		pstm.setString(3, u);
+		pstm.setString(4, g);
+		pstm.setString(5, p);
+		pstm.setString(6, s1);
+		pstm.setString(7, s2);
+		pstm.setString(8, t);
+		pstm.setString(9, c);
+		pstm.setString(10, co);
+		pstm.setString(11, pos);
+		pstm.setInt(12, 1);
+		pstm.setLong(13, 2);
+		pstm.executeUpdate();
+		System.out.println("1" +f +"2"+l + "3" + g);
 	}
 
 	public static void insertIntoShoppingCart(Connection conn, org.gareth.webapp.beans.ShoppingCart cart)
@@ -220,7 +283,17 @@ public class DBUtils {
 		pstm.setString(3, "n");
 		pstm.executeUpdate();
 	}
-
+	
+	public static void updateShoppingCart(Connection conn, UserAccount user)
+			throws SQLException {
+		String sql = "Update Shopping_Cart set paid = ? where userName = ? and paid = ?";
+		PreparedStatement pstm = conn.prepareStatement(sql);
+		pstm.setString(1, "y");
+		pstm.setString(2, user.getUserName());
+		pstm.setString(3, "n");		
+		pstm.executeUpdate();
+		
+	}
 	public static void deleteProduct(Connection conn, String code) throws SQLException {
 		String sql = "Delete From Product where Code = ?";
 
@@ -238,8 +311,10 @@ public class DBUtils {
 
 		pstm.setString(1, user);
 		pstm.setString(2, code);
-		System.out.println("xxxx"+code.toString() + "" + user.toString());
+		System.out.println("xxxx"+code.toString() + "1" + user.toString());
 		pstm.executeUpdate();
 	}
+
+	
 
 }
