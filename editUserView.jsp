@@ -44,7 +44,8 @@ tr:hover {background-color:#f5f5f5;}
       <c:if test="${not empty user}">
          <form method="POST" action="${pageContext.request.contextPath}/editUser">
             <input type="hidden" name="firstname" value="${user.firstname}" />
-            <input type="hidden" name="lastname" value="${user.lastname}" />           
+            <input type="hidden" name="lastname" value="${user.lastname}" /> 
+            <input type="hidden" name="lastname" value="${user.userName}" />            
             <table>
                <tr>
                   <td>First Name</td>
@@ -56,7 +57,7 @@ tr:hover {background-color:#f5f5f5;}
                </tr>
                <tr>
                   <td>User Name</td>
-                  <td><input type="text" name="userName" value="${user.userName}" /></td>
+                 <td style="color:black;">${user.userName}</td>
                </tr>
                <tr>
                   <td>Street Address 1</td>

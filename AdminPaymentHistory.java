@@ -1,10 +1,9 @@
 package org.gareth.webapp.servlet;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,25 +13,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.gareth.webapp.beans.Product;
+import org.gareth.webapp.beans.ShoppingCart;
 import org.gareth.webapp.beans.UserAccount;
-import org.gareth.webapp.interfaces.*;
+import org.gareth.webapp.interfaces.PaymentHistory;
 import org.gareth.webapp.utils.DBUtils;
 import org.gareth.webapp.utils.MyUtils;
 
-@WebServlet(urlPatterns = { "/userPaymentHistory" })
-public class UserPaymentHistory extends HttpServlet implements PaymentHistory {
+@WebServlet(urlPatterns = { "/adminPaymentHistory" })
+public class AdminPaymentHistory extends HttpServlet implements PaymentHistory {
 
 	private static final long serialVersionUID = 1L;
-	 /*private static final Map<String, UserAccount> prototypes = new HashMap<>();*/
 
-	@Override
-	public UserPaymentHistory clone() {
-		
-		// TODO Auto-generated method stub
-		return new UserPaymentHistory();
+	public AdminPaymentHistory clone() {
+		return new AdminPaymentHistory();
 	}
+
 	 @Override
-	    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	    protected void doGet(HttpServletRequest request,HttpServletResponse response)
 	            throws ServletException, IOException {
 	    	Connection conn = MyUtils.getStoredConnection(request);
 	    	HttpSession session = request.getSession();
@@ -43,7 +41,7 @@ public class UserPaymentHistory extends HttpServlet implements PaymentHistory {
 	        List<org.gareth.webapp.beans.ShoppingCart> list = null;
 	        String choice ="y";
 	        try {
-	            list = DBUtils.queryShoppingCart(conn,loginedUser,choice);
+	            list = DBUtils.queryAdminShoppingCart(conn,choice);
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	            errorString = e.getMessage();
@@ -56,7 +54,7 @@ public class UserPaymentHistory extends HttpServlet implements PaymentHistory {
 	        
 	        // Forward to /WEB-INF/views/homeView.jsp
 	        // (Users can not access directly into JSP pages placed in WEB-INF)
-	        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/userPaymentHistory.jsp");
+	        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/AdminPaymentHistory.jsp");
 	         
 	        dispatcher.forward(request, response);
 	         
@@ -69,6 +67,5 @@ public class UserPaymentHistory extends HttpServlet implements PaymentHistory {
 	       
 	      
 	    }
-	 
 
 }
