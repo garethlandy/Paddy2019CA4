@@ -15,8 +15,10 @@
 				List</a></th>
 		<th><a href="${pageContext.request.contextPath}/userInfo">My
 				Account Info</a></th>
-		<th><a href="${pageContext.request.contextPath}/purchaseHistory">Purchase
+		<th><a href="${pageContext.request.contextPath}/userPaymentHistory">Purchase
 				History</a></th>
+				<th><a href="${pageContext.request.contextPath}/userReview">Product Reviews
+				</a></th>
 		<th><a href="${pageContext.request.contextPath}/login">Logout</a></th>
 		<th>${count}<a href="${pageContext.request.contextPath}/shoppingCart">
 				<img src="images/cart.png" alt="Cart"
